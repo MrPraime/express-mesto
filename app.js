@@ -9,8 +9,8 @@ const { PORT = 3000 } = process.env;
 const app = express();
 app.use(bodyParser.json());
 
-app.use('/', routesUsers);
-app.use('/', routesCards);
+app.use('/users', routesUsers);
+app.use('/cards', routesCards);
 
 mongoose.connect('mongodb://localhost:27017/mestodb', () => {
   console.log('Успех!');

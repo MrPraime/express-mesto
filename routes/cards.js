@@ -9,10 +9,10 @@ const {
 } = require('../controllers/cards');
 
 router.get('/', getCards);
-router.post('/cards ', createCard);
+router.post('/ ', createCard);
 router.delete('/:id', delCard);
-router.put('/cards/:cardId/likes', likeCard);
-router.delete('/cards/:cardId/likes', dislikeCard);
+router.put('/:cardId/likes', likeCard);
+router.delete('/:cardId/likes', dislikeCard);
 
 
 
