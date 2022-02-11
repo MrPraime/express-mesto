@@ -10,14 +10,14 @@ const getUsers = (req, res) => {
   });
 };
 
-
 const getUser = (req, res) => {
   const { id } = req.params;
   return User.findById(id)
   .then((user) => res.status(200).send(user))
+
   .catch((err) => {
     if (err.name === 'CastError') {
-      res.status(400).send({ message: 'Переданы некорректные данные'});
+      res.status(400).send({ message: 'Переданы некорректные данные' });
     } else if (err.message === 'NotFound') {
       res.status(404).send({ message: 'Пользователь не найден' });
     } else {
@@ -29,6 +29,7 @@ const getUser = (req, res) => {
 const createUser = (req, res) => {
   const { name, about, avatar } = req.body;
   return User.create({ name, about, avatar })
+
   .then((user) => res.status(200).send(user)) .catch((err) => {
     if (err.name === 'CastError') {
       res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя'});
@@ -40,10 +41,9 @@ const createUser = (req, res) => {
   });
 };
 
-
 const updateAvatar = (req, res) => {
   const { avatar } = req.body;
-  return User.findByIdAndUpdate(req.user._id, { avatar }, { new: true })
+  return User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
   .then((user) => res.status(200).send(user)) .catch((err) => {
     if (err.name === 'CastError') {
       res.status(400).send({ message: 'Переданы некорректные данные при обновлении аватара'});
@@ -55,13 +55,12 @@ const updateAvatar = (req, res) => {
   });
 }
 
-
 const updateUser = (req, res) => {
   const { name, about } = req.body;
 
-  return User.findByIdAndUpdate(req.user._id, { name, about }, { new: true })
-
-    .then((user) => res.status(200).send(user)) .catch((err) => {
+  return User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
+    .then((user) => res.status(200).send(user))
+    .catch((err) => {
       if (err.name === 'CastError') {
         res.status(400).send({ message: 'Переданы некорректные данные при обновлении профиля'});
       } else if (err.message === 'NotFound') {
@@ -72,8 +71,6 @@ const updateUser = (req, res) => {
     });
 
 };
-
-
 
 module.exports = {
   getUsers,

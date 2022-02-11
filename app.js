@@ -1,16 +1,13 @@
-
 const express = require('express');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 const routesUsers = require('./routes/users');
 const routesCards = require('./routes/cards');
-const bodyParser = require('body-parser');
 
 const { PORT = 3000 } = process.env;
 const app = express();
 app.use(bodyParser.json());
 
-app.use('/users', routesUsers);
-app.use('/cards', routesCards);
 
 mongoose.connect('mongodb://localhost:27017/mestodb', () => {
   console.log('Успех!');
@@ -18,11 +15,15 @@ mongoose.connect('mongodb://localhost:27017/mestodb', () => {
 
 app.use((req, res, next) => {
   req.user = {
-    _id: '620401c61f05eb04de2da006'
-  };
+    _id: '620401c61f05eb04de2da006',
 
+  };
+  console.log(req.user);
   next();
 });
+
+app.use('/users', routesUsers);
+app.use('/cards', routesCards);
 
 
 app.listen(PORT, () => {
