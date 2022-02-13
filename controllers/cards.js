@@ -41,11 +41,7 @@ const delCard = (req, res) => {
 };
 
 const likeCard = (req, res) => {
-  Cards.findByIdAndUpdate(
-    req.params.id,
-    { $addToSet: { likes: req.user._id } },
-    { new: true },
-  )
+  Cards.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
     .orFail(() => {
     throw new Error('NotFound');
   })
@@ -62,7 +58,7 @@ const likeCard = (req, res) => {
 };
 
 const dislikeCard = (req, res) => {
-  Cards.findByIdAndUpdate(req.params.id, { $pull: { likes: req.user._id } }, { new: true })
+  Cards.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
     .orFail(() => {
       throw new Error('NotFound');
     })
