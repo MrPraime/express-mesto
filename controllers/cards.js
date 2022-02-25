@@ -1,22 +1,16 @@
-/* eslint-disable import/no-unresolved */
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-undef */
-
 const Cards = require('../models/card');
 
 const NotFoundError = require('../errors/not-found-error');
 const BadRequestError = require('../errors/bad-request-error');
 const ForbiddenError = require('../errors/forbidden-error');
 
-const getCards = (req, res) => {
-  const { cardList } = {};
-
-  return Cards.find(cardList)
+const getCards = (req, res, next) => {
+  Cards.find({})
     .then((cards) => res.status(200).send(cards))
     .catch(next);
 };
 
-const createCard = (req, res) => {
+const createCard = (req, res, next) => {
   const { name, link } = req.body;
   return Cards.create({ name, link, owner: req.user._id })
     .then((card) => res.status(200).send(card))
@@ -27,7 +21,7 @@ const createCard = (req, res) => {
     });
 };
 
-const delCard = (req, res) => {
+const delCard = (req, res, next) => {
   Cards.findByIdAndRemove(req.params.id)
     .orFail(() => {
       throw new NotFoundError('Карточка не найдена');
@@ -46,7 +40,7 @@ const delCard = (req, res) => {
     });
 };
 
-const likeCard = (req, res) => {
+const likeCard = (req, res, next) => {
   Cards.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
 
     .orFail(new NotFoundError('Карточка не найдена'))
@@ -58,7 +52,7 @@ const likeCard = (req, res) => {
     });
 };
 
-const dislikeCard = (req, res) => {
+const dislikeCard = (req, res, next) => {
   Cards.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
 
     .orFail(new NotFoundError('Карточка не найдена'))

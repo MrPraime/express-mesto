@@ -1,8 +1,8 @@
-/* eslint-disable no-unused-vars */
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
+const errorHandler = require('./middlewares/errorHandling');
 const routes = require('./routes');
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
@@ -14,20 +14,19 @@ const app = express();
 app.use(bodyParser.json());
 
 mongoose.connect('mongodb://localhost:27017/mestodb', () => {
-  // eslint-disable-next-line no-console
   console.log('Успех!');
 });
 
 app.post('/signin', signInValidation, login);
 app.post('/signup', signUpValidation, createUser);
-app.use((req, res) => {
+app.use(auth);
+app.use('/', routes);
+app.use('*', () => {
   throw new NotFoundError('Страница не найдена');
 });
-app.use('/', auth, routes);
-
 app.use(errors());
+app.use(errorHandler);
 
 app.listen(PORT, () => {
-  // eslint-disable-next-line no-console
   console.log(`App listening on por ${PORT}`);
 });
